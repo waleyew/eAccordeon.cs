@@ -23,43 +23,68 @@
 
         <DockPanel Grid.IsSharedSizeScope="True" Grid.Column="0">
 
-            <GroupBox Header="Свойства MIDI:" DockPanel.Dock="Top">
-                <Grid >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200" SharedSizeGroup="A"/>
-                        <ColumnDefinition Width="auto" MinWidth="200"></ColumnDefinition>
-                        <ColumnDefinition Width="auto" ></ColumnDefinition>
-                        <ColumnDefinition Width="auto" ></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                    </Grid.RowDefinitions>
+            <TabControl DockPanel.Dock="Top">
+                <TabItem Header="Общие настройки MIDI:" >
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200" SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="auto" MinWidth="200"></ColumnDefinition>
+                            <ColumnDefinition Width="auto" ></ColumnDefinition>
+                            <ColumnDefinition Width="auto" ></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
 
-                    <Label Grid.Column="0" Grid.ColumnSpan="2">Устройство воспроизведения:</Label>
-                    <ComboBox Grid.Column="1" ItemsSource="{Binding MidiDevices}" SelectedItem="{Binding SelectedMidiDevice}" DisplayMemberPath="Caption" Margin="2"></ComboBox>
-                    <Button Grid.Column="3" Margin="2,2,3,2" Width="90" Command="{Binding ShowMIDIDeviceInfoCommand}">Инфо...</Button>
+                        <Label Grid.Column="0" Grid.ColumnSpan="2">Устройство воспроизведения:</Label>
+                        <ComboBox Grid.Column="1" ItemsSource="{Binding MidiDevices}" SelectedItem="{Binding SelectedMidiDevice}" DisplayMemberPath="Caption" Margin="2"></ComboBox>
+                        <Button Grid.Column="3" Margin="2,2,3,2" Width="90" Command="{Binding ShowMIDIDeviceInfoCommand}">Инфо...</Button>
 
-                    <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">Инструмент:</Label>
-                    <ComboBox  Grid.Row="1" Grid.Column="1" ItemsSource="{Binding PatchInfoArray}" SelectedItem="{Binding SelectedPatchInfo}" DisplayMemberPath="Caption" Margin="2"></ComboBox>
+                        <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">Инструмент:</Label>
+                        <ComboBox  Grid.Row="1" Grid.Column="1" ItemsSource="{Binding PatchInfoArray}" SelectedItem="{Binding SelectedPatchInfo}" DisplayMemberPath="Caption" Margin="2"></ComboBox>
 
-                    <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">Регистр клавиш:</Label>
-                    <ComboBox  Grid.Row="2" Grid.Column="1" ItemsSource="{Binding RightRegisterList}" SelectedItem="{Binding SelectedRightRegister}" DisplayMemberPath="Caption" Margin="2"></ComboBox>
+                        <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">Регистр клавиш:</Label>
+                        <ComboBox  Grid.Row="2" Grid.Column="1" ItemsSource="{Binding RightRegisterList}" SelectedItem="{Binding SelectedRightRegister}" DisplayMemberPath="Caption" Margin="2"></ComboBox>
 
-                    <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">Регистр басов:</Label>
-                    <ComboBox  Grid.Row="3" Grid.Column="1" ItemsSource="{Binding LeftRegisterList}" SelectedItem="{Binding SelectedLeftRegister}" DisplayMemberPath="Caption" Margin="2"></ComboBox>
+                        <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">Регистр басов:</Label>
+                        <ComboBox  Grid.Row="3" Grid.Column="1" ItemsSource="{Binding LeftRegisterList}" SelectedItem="{Binding SelectedLeftRegister}" DisplayMemberPath="Caption" Margin="2"></ComboBox>
 
-                    <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">Фильтр давления:</Label>
-                    <TextBox  Grid.Row="4" Grid.Column="1" Text="{Binding PressudeFilter}" Margin="2"></TextBox>
+                        <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">Канал для правой руки:</Label>
+                        <TextBox  Grid.Row="4" Grid.Column="1" Text="{Binding ChannelIdForRightSide}" Margin="2"></TextBox>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Настройки мехов">
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200" SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="auto" MinWidth="200"></ColumnDefinition>
+                            <ColumnDefinition Width="auto" ></ColumnDefinition>
+                            <ColumnDefinition Width="auto" ></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
 
-                    <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">Канал для правой руки:</Label>
-                    <TextBox  Grid.Row="5" Grid.Column="1" Text="{Binding ChannelIdForRightSide}" Margin="2"></TextBox>
-                </Grid>
-            </GroupBox>
+                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">Сглаживание:</Label>
+                        <Slider Grid.Row="0" Grid.Column="1"  Minimum="0" Maximum="100" Value="{Binding PressudeFilterP}" ></Slider>
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding PressudeFilterP, StringFormat={}{0:0}%}"></TextBlock>
+
+
+                       
+                    </Grid>
+                </TabItem>
+            </TabControl>
+            
 
             <GroupBox Header="Отладка:" DockPanel.Dock="Bottom">
                 <TextBox IsReadOnly="True" Text="{Binding DebugText, Mode=OneWay}"/>

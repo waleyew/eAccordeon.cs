@@ -236,10 +236,14 @@ namespace eAccordeon.ViewModel
             set;
         } = PatchInfo.CreatePatchInfoArray();
 
-        public float PressudeFilter
+        public float PressudeFilterP
         {
-            get { return meAccordeon.PressudeFilter; }
-            set { meAccordeon.PressudeFilter = value; }
+            get { return (1f - meAccordeon.PressudeFilter) * 100f; }
+            set
+            {
+                meAccordeon.PressudeFilter = 1f - value / 100f;
+                OnPropertyChanged();
+            }
         }
 
         public int ChannelIdForRightSide
