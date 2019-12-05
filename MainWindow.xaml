@@ -7,6 +7,7 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="Электронный аккордеон" Height="450" Width="800"
+        Closed="Window_Closed"
         >
     <!-- В качестве контекста данных формы используется экземпляр класса EAccordeonViewModel -->
 

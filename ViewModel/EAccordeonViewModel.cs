@@ -29,10 +29,32 @@ namespace eAccordeon.ViewModel
         {
             meAccordeon = new EAccordeon();
 
+            try
+            {
+                var devId = Properties.Settings.Default.SelectedMidiDeviceId;
+                mSelectedMidiDevice = MidiDevices[devId];
+            }
+            catch { };
+
+            try
+            {
+                var patchId = Properties.Settings.Default.SelectedPatchId;
+                mSelectedPatchInfo = PatchInfoArray[patchId];
+            }
+            catch { };
+
+
             MidiControllerBase defaultMidiController;
             mMidiControllers.Add(defaultMidiController = new MidiControllerVirtual(meAccordeon));
             mMidiControllers.Add(new MidiControllerSerial(meAccordeon));
-            mSelectedMidiController = defaultMidiController;
+
+            try
+            {
+                var cId = Properties.Settings.Default.SelectedMidiControllerId;
+                mSelectedMidiController = mMidiControllers[cId];
+            }
+            catch { mSelectedMidiController = defaultMidiController; }
+
 
             ShowMIDIDeviceInfoCommand = new RelayCommand(o =>
             {
@@ -63,9 +85,6 @@ namespace eAccordeon.ViewModel
             { HadleExceptions = true };
 
 
-            SelectedMidiDevice = MidiDevices.FirstOrDefault();
-
-
             mTimer = new DispatcherTimer(DispatcherPriority.Background);
             mTimer.Interval = TimeSpan.FromMilliseconds(100);
             mTimer.Tick += MTimer_Tick;
@@ -91,6 +110,8 @@ namespace eAccordeon.ViewModel
 
                 mSelectedMidiController = value;
                 OnPropertyChanged();
+
+                Properties.Settings.Default.SelectedMidiControllerId = MidiControllers.IndexOf(mSelectedMidiController);
             }
         }
 
@@ -136,6 +157,10 @@ namespace eAccordeon.ViewModel
             {
                 meAccordeon.MidiHelper.SetDevice(value);
                 mSelectedMidiDevice = value;
+
+                try { Properties.Settings.Default.SelectedMidiDeviceId = value.DeviceId; }
+                catch { Properties.Settings.Default.SelectedMidiDeviceId = 0; }
+
                 OnPropertyChanged();
             }
         }
@@ -196,7 +221,12 @@ namespace eAccordeon.ViewModel
             {
                 mSelectedPatchInfo = value;
                 if (mSelectedPatchInfo != null)
-                    meAccordeon.MidiHelper.ChangePatch(1, mSelectedPatchInfo.Id);
+                {
+                    meAccordeon.MidiHelper.ChangePatch(meAccordeon.ChannelIdForRightSide, mSelectedPatchInfo.Id);
+                    Properties.Settings.Default.SelectedPatchId = Array.IndexOf(PatchInfoArray, mSelectedPatchInfo);
+                }
+                else
+                    Properties.Settings.Default.SelectedPatchId = 0;
             }
         }
 

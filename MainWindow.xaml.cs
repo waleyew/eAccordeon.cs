@@ -22,7 +22,7 @@ namespace eAccordeon
     public partial class MainWindow : Window
     {
         EAccordeonViewModel mEAccordeonViewModel;
-        
+
         public MainWindow()
         {
             InitializeComponent();
@@ -31,5 +31,10 @@ namespace eAccordeon
             DataContext = mEAccordeonViewModel;
         }
 
+        
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Save();
+        }
     }
 }

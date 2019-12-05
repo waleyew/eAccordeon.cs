@@ -22,5 +22,113 @@ namespace eAccordeon.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SelectedMidiDeviceId {
+            get {
+                return ((int)(this["SelectedMidiDeviceId"]));
+            }
+            set {
+                this["SelectedMidiDeviceId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SelectedPatchId {
+            get {
+                return ((int)(this["SelectedPatchId"]));
+            }
+            set {
+                this["SelectedPatchId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SelectedRightRegisterId {
+            get {
+                return ((int)(this["SelectedRightRegisterId"]));
+            }
+            set {
+                this["SelectedRightRegisterId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SelectedLeftRegisterId {
+            get {
+                return ((int)(this["SelectedLeftRegisterId"]));
+            }
+            set {
+                this["SelectedLeftRegisterId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.2")]
+        public float PressureFilter {
+            get {
+                return ((float)(this["PressureFilter"]));
+            }
+            set {
+                this["PressureFilter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int ChannelIdForRightSide {
+            get {
+                return ((int)(this["ChannelIdForRightSide"]));
+            }
+            set {
+                this["ChannelIdForRightSide"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SelectedMidiControllerId {
+            get {
+                return ((int)(this["SelectedMidiControllerId"]));
+            }
+            set {
+                this["SelectedMidiControllerId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("57600")]
+        public int SerialportController_BaudRate {
+            get {
+                return ((int)(this["SerialportController_BaudRate"]));
+            }
+            set {
+                this["SerialportController_BaudRate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM1")]
+        public string SerialportController_PortName {
+            get {
+                return ((string)(this["SerialportController_PortName"]));
+            }
+            set {
+                this["SerialportController_PortName"] = value;
+            }
+        }
     }
 }

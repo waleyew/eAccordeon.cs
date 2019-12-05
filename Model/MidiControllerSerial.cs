@@ -15,7 +15,12 @@ namespace eAccordeon.Model
             mPort = new SerialPort();
 
             mPort.ReadTimeout = 1000;
-            mPort.BaudRate = 57600;
+
+            try { mPort.BaudRate = Properties.Settings.Default.SerialportController_BaudRate; }
+            catch { }
+
+            try { mPort.PortName = Properties.Settings.Default.SerialportController_PortName; }
+            catch { }
 
             mPortListenerTask = Task.Factory.StartNew(ListenSerial);
         }
@@ -48,7 +53,7 @@ namespace eAccordeon.Model
                     {
                         var readed = 0;
                         packetData[0] = 0;
-                        while(packetData[0] != 0x5B)
+                        while (packetData[0] != 0x5B)
                             readed = mPort.Read(packetData, 0, 1);
 
                         while (readed < packetSize)
@@ -134,13 +139,21 @@ namespace eAccordeon.Model
         public string SerialPortName
         {
             get { return mPort.PortName; }
-            set { mPort.PortName = value; }
+            set
+            {
+                mPort.PortName = value;
+                Properties.Settings.Default.SerialportController_PortName = mPort.PortName;
+            }
         }
 
         public int SerialPortBaudRate
         {
             get { return mPort.BaudRate; }
-            set { mPort.BaudRate = value; }
+            set
+            {
+                mPort.BaudRate = value;
+                Properties.Settings.Default.SerialportController_BaudRate = mPort.BaudRate;
+            }
         }
 
     }

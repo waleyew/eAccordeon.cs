@@ -10,6 +10,8 @@ namespace eAccordeon.Model
     public class MidiHelper
     {
         MidiOut midiOut;
+        MidiDeviceInfo[] mGetDevicesCache;
+
 
 
         public void SetVolume(int channel, int volume)
@@ -34,11 +36,15 @@ namespace eAccordeon.Model
         /// <returns></returns>
         public MidiDeviceInfo[] GetDevices()
         {
+            if (mGetDevicesCache != null)
+                return mGetDevicesCache;
+
             List<MidiDeviceInfo> result = new List<MidiDeviceInfo>();
             for (int i = 0; i < MidiOut.NumberOfDevices; i++)
                 result.Add(new MidiDeviceInfo(i, MidiOut.DeviceInfo(i)));
 
-            return result.ToArray();
+            mGetDevicesCache = result.ToArray();
+            return mGetDevicesCache;
         }
 
         public void SetDevice(MidiDeviceInfo deviceInfo)

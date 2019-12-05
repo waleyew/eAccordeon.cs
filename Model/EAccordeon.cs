@@ -16,7 +16,7 @@ namespace eAccordeon.Model
         MidiHelper mMidiHelper;
         MidiControllerBase mMidiController;
         float mActualPressurePercents;
-        float mActualPressurePercents_ExpFilterAlpha = 0.2f;
+        float mActualPressurePercents_ExpFilterAlpha;
         AccordeonRightKeys mActualPightKeysState;
         UInt64 mActualLeftVoicesState;
         RegisterInfo[] mRightRegisters;
@@ -39,13 +39,19 @@ namespace eAccordeon.Model
                 new RegisterInfo("Основная октава, -1", new int[] {0, -1}),
                 new RegisterInfo("Основная октава, -1, +1", new int[] {0, -1, +1}),
             };
-            SelectedRightRegister = mRightRegisters[0];
+            try { SelectedRightRegister = mRightRegisters[Properties.Settings.Default.SelectedRightRegisterId]; }
+            catch { SelectedRightRegister = mRightRegisters[0]; }
+
 
             mLeftRegisters = new RegisterInfo[]
             {
                 new RegisterInfo("Основная октава", new int[] {0}),
             };
-            SelectedLeftRegister = mLeftRegisters[0];
+            try { SelectedLeftRegister = mLeftRegisters[Properties.Settings.Default.SelectedLeftRegisterId]; }
+            catch { SelectedLeftRegister = mLeftRegisters[0]; }
+
+            mActualPressurePercents_ExpFilterAlpha = Properties.Settings.Default.PressureFilter;
+            mChannelIdForRightSide = Properties.Settings.Default.ChannelIdForRightSide;
         }
 
         public MidiHelper MidiHelper
@@ -158,6 +164,7 @@ namespace eAccordeon.Model
                 if (value > 1f)
                     value = 1f;
                 mActualPressurePercents_ExpFilterAlpha = value;
+                Properties.Settings.Default.PressureFilter = mActualPressurePercents_ExpFilterAlpha;
             }
         }
 
@@ -238,6 +245,8 @@ namespace eAccordeon.Model
             {
                 mSelectedRightRegister = value;
                 mMidiHelper.ResetDevice();
+
+                Properties.Settings.Default.SelectedRightRegisterId = Array.IndexOf(mRightRegisters, value);
             }
         }
 
@@ -248,6 +257,8 @@ namespace eAccordeon.Model
             {
                 mSelectedLeftRegister = value;
                 mMidiHelper.ResetDevice();
+
+                Properties.Settings.Default.SelectedLeftRegisterId = Array.IndexOf(mLeftRegisters, value);
             }
         }
 
@@ -261,6 +272,7 @@ namespace eAccordeon.Model
                 if (value > 15)
                     value = 15;
                 mChannelIdForRightSide = value;
+                Properties.Settings.Default.ChannelIdForRightSide = mChannelIdForRightSide;
             }
         }
 
