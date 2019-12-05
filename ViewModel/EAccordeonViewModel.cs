@@ -205,6 +205,18 @@ namespace eAccordeon.ViewModel
             get;
             set;
         } = PatchInfo.CreatePatchInfoArray();
+
+        public float PressudeFilter
+        {
+            get { return meAccordeon.PressudeFilter; }
+            set { meAccordeon.PressudeFilter = value; }
+        }
+
+        public int ChannelIdForRightSide
+        {
+            get { return meAccordeon.ChannelIdForRightSide; }
+            set { meAccordeon.ChannelIdForRightSide = value; }
+        }
     }
 
     public class PatchInfo

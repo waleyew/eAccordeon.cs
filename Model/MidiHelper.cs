@@ -14,8 +14,8 @@ namespace eAccordeon.Model
 
         public void SetVolume(int channel, int volume)
         {
-            if (volume < 0)
-                volume = 0;
+            if (volume < 1)
+                volume = 1;
             if (volume > 127)
                 volume = 127;
 
@@ -24,7 +24,7 @@ namespace eAccordeon.Model
 
         public void ChangePatch(int channel, int patchId)
         {
-            midiOut.Send(MidiMessage.ChangePatch(2, 1).RawData);
+            midiOut.Send(MidiMessage.ChangePatch(patchId, 1).RawData);
         }
 
 
@@ -63,11 +63,11 @@ namespace eAccordeon.Model
             switch (state)
             {
                 case NoteState.On:
-                    msg = MidiMessage.StartNote(note, volume, channel);
+                    msg = MidiMessage.StartNote(note, 127, channel);
                     break;
 
                 default:
-                    msg = MidiMessage.StopNote(note, volume, channel);
+                    msg = MidiMessage.StopNote(note, 0, channel);
                     break;
             }
             midiOut?.Send(msg.RawData);

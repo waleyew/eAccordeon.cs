@@ -35,6 +35,8 @@
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
 
                     <Label Grid.Column="0" Grid.ColumnSpan="2">Устройство воспроизведения:</Label>
@@ -49,6 +51,12 @@
 
                     <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">Регистр басов:</Label>
                     <ComboBox  Grid.Row="3" Grid.Column="1" ItemsSource="{Binding LeftRegisterList}" SelectedItem="{Binding SelectedLeftRegister}" DisplayMemberPath="Caption" Margin="2"></ComboBox>
+
+                    <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">Фильтр давления:</Label>
+                    <TextBox  Grid.Row="4" Grid.Column="1" Text="{Binding PressudeFilter}" Margin="2"></TextBox>
+
+                    <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">Канал для правой руки:</Label>
+                    <TextBox  Grid.Row="5" Grid.Column="1" Text="{Binding ChannelIdForRightSide}" Margin="2"></TextBox>
                 </Grid>
             </GroupBox>
 

@@ -16,12 +16,14 @@ namespace eAccordeon.Model
         MidiHelper mMidiHelper;
         MidiControllerBase mMidiController;
         float mActualPressurePercents;
+        float mActualPressurePercents_ExpFilterAlpha = 0.2f;
         AccordeonRightKeys mActualPightKeysState;
         UInt64 mActualLeftVoicesState;
         RegisterInfo[] mRightRegisters;
         RegisterInfo[] mLeftRegisters;
         RegisterInfo mSelectedRightRegister;
         RegisterInfo mSelectedLeftRegister;
+        int mChannelIdForRightSide = 1;
 
 
 
@@ -74,8 +76,7 @@ namespace eAccordeon.Model
             //System.Diagnostics.Debug.Print($"{pressureCode}, {rightKeysState}, {leftVoicesState}");
             //return;
 
-            if (mActualPressurePercents != pressureCode)
-                ChangePressure(pressureCode);
+            ProccedPressude(pressureCode);
 
             if (rightKeysState != mActualPightKeysState)
                 ChangeActualRightKeysPressed(rightKeysState);
@@ -84,9 +85,25 @@ namespace eAccordeon.Model
                 ChangeActualLeftVoisesPressed(leftVoicesState);
         }
 
+        /// <summary>
+        /// Применяет уровень звука (от давленя мехов)
+        /// </summary>
+        /// <param name="pressureCode"></param>
+        private void ProccedPressude(byte pressureCode)
+        {
+            var alpha = mActualPressurePercents_ExpFilterAlpha;
+            mActualPressurePercents = pressureCode * alpha + mActualPressurePercents * (1f - alpha);
+            ChangePressure((byte)mActualPressurePercents);
+        }
+
+        byte mAppliedPressureCode;
         private void ChangePressure(byte pressure)
         {
-            mMidiHelper.SetVolume(1, pressure);
+            if (mAppliedPressureCode == pressure)
+                return;
+
+            mAppliedPressureCode = pressure;
+            mMidiHelper.SetVolume(mChannelIdForRightSide, pressure);
         }
 
         private void ChangeActualLeftVoisesPressed(ulong leftVoicesState)
@@ -118,7 +135,7 @@ namespace eAccordeon.Model
             var realNotes = SelectedRightRegister.GetNotes(pureNote);
 
             foreach (var n in realNotes)
-                mMidiHelper.Note(1, n, state);
+                mMidiHelper.Note(mChannelIdForRightSide, n, state);
         }
 
 
@@ -130,6 +147,19 @@ namespace eAccordeon.Model
             get { return mActualPressurePercents; }
         }
 
+        public float PressudeFilter
+        {
+            get { return mActualPressurePercents_ExpFilterAlpha; }
+            set
+            {
+                if (value < 0.01f)
+                    value = 0.01f;
+
+                if (value > 1f)
+                    value = 1f;
+                mActualPressurePercents_ExpFilterAlpha = value;
+            }
+        }
 
 
         /// <summary>
@@ -196,7 +226,7 @@ namespace eAccordeon.Model
             if (tone < 0)  // Какая клавиша нажата не определено
                 return -1;
 
-            return baseOctave * 12 + tone;
+            return baseOctave * 12 + (tone - 2);
         }
 
 
@@ -220,6 +250,20 @@ namespace eAccordeon.Model
                 mMidiHelper.ResetDevice();
             }
         }
+
+        public int ChannelIdForRightSide
+        {
+            get { return mChannelIdForRightSide; }
+            set
+            {
+                if (value < 1)
+                    value = 1;
+                if (value > 15)
+                    value = 15;
+                mChannelIdForRightSide = value;
+            }
+        }
+
         public RegisterInfo[] GetRightRegisters()
         {
             return mRightRegisters;
