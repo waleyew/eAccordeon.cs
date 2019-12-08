@@ -69,7 +69,7 @@ namespace eAccordeon.Model
             switch (state)
             {
                 case NoteState.On:
-                    msg = MidiMessage.StartNote(note, 127, channel);
+                    msg = MidiMessage.StartNote(note, volume, channel);
                     break;
 
                 default:

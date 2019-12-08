@@ -39,6 +39,7 @@
                             <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
 
                         <Label Grid.Column="0" Grid.ColumnSpan="2">Устройство воспроизведения:</Label>
@@ -56,12 +57,20 @@
 
                         <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">Канал для правой руки:</Label>
                         <TextBox  Grid.Row="4" Grid.Column="1" Text="{Binding ChannelIdForRightSide}" Margin="2"></TextBox>
+
+                        <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">Сила нажатия клавиш:</Label>
+                        <TextBox  Grid.Row="5" Grid.Column="1" Text="{Binding KeystrokeForce}" Margin="2"></TextBox>
+
+                        
+                        <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Content="Смещение октавы правой руки:"/>
+                        <TextBox  Grid.Row="6" Grid.Column="1" Text="{Binding RightHandOctaveShift}" Margin="2"></TextBox>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Настройки мехов">
                     <Grid >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200" SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="40" SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="161"/>
                             <ColumnDefinition Width="auto" MinWidth="200"></ColumnDefinition>
                             <ColumnDefinition Width="auto" ></ColumnDefinition>
                             <ColumnDefinition Width="auto" ></ColumnDefinition>
@@ -75,16 +84,24 @@
                             <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
 
-                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">Сглаживание:</Label>
-                        <Slider Grid.Row="0" Grid.Column="1"  Minimum="0" Maximum="100" Value="{Binding PressudeFilterP}" ></Slider>
-                        <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding PressudeFilterP, StringFormat={}{0:0}%}"></TextBlock>
+                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">Использование датчика давления:</Label>
+                        <ComboBox Grid.Row="0" Grid.Column="2" SelectedItem="{Binding TransformPressureMethod}" ItemsSource="{Binding TransformPressureMethods}" Margin="2"></ComboBox>
+
+                        <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" ToolTip="Верхний предел измерения датчика давления}">ВПИ датчика давления:</Label>
+                        <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding PressureSensonUpperLimit}" Margin="2"></TextBox>
 
 
-                       
+
+                        <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">Сглаживание:</Label>
+                        <Slider Grid.Row="2" Grid.Column="2"  Minimum="0" Maximum="100" Value="{Binding PressudeFilterP}" Margin="2" ></Slider>
+                        <TextBlock Grid.Row="2" Grid.Column="3" Text="{Binding PressudeFilterP, StringFormat={}{0:0}%}"></TextBlock>
+
+
+
                     </Grid>
                 </TabItem>
             </TabControl>
-            
+
 
             <GroupBox Header="Отладка:" DockPanel.Dock="Bottom">
                 <TextBox IsReadOnly="True" Text="{Binding DebugText, Mode=OneWay}"/>

@@ -24,6 +24,10 @@ namespace eAccordeon.Model
         RegisterInfo mSelectedRightRegister;
         RegisterInfo mSelectedLeftRegister;
         int mChannelIdForRightSide = 1;
+        TransformPressureMethod mTransformPressureMethod;
+        ushort mPressureSensonUpperLimit;
+        int mKeystrokeForce;
+        int mRightHandOctaveShift;
 
 
 
@@ -52,6 +56,13 @@ namespace eAccordeon.Model
 
             mActualPressurePercents_ExpFilterAlpha = Properties.Settings.Default.PressureFilter;
             mChannelIdForRightSide = Properties.Settings.Default.ChannelIdForRightSide;
+
+            mTransformPressureMethod = (TransformPressureMethod)Properties.Settings.Default.TransformPressureMethod;
+            mPressureSensonUpperLimit = Properties.Settings.Default.PressureSensonUpperLimit;
+
+            mKeystrokeForce = Properties.Settings.Default.KeystrokeForce;
+            mRightHandOctaveShift = Properties.Settings.Default.RightHandOctaveShift;
+
         }
 
         public MidiHelper MidiHelper
@@ -89,6 +100,86 @@ namespace eAccordeon.Model
 
             if (leftVoicesState != mActualLeftVoicesState)
                 ChangeActualLeftVoisesPressed(leftVoicesState);
+        }
+
+
+        public ushort PressureSensonUpperLimit
+        {
+            get { return mPressureSensonUpperLimit; }
+            set
+            {
+                mPressureSensonUpperLimit = value;
+                Properties.Settings.Default.PressureSensonUpperLimit = value;
+            }
+        }
+
+
+        public int KeystrokeForce
+        {
+            get { return mKeystrokeForce; }
+            set
+            {
+                if (value < 1)
+                    value = 1;
+
+                if (value > 127)
+                    value = 127;
+
+                mKeystrokeForce = value;
+                Properties.Settings.Default.KeystrokeForce = value;
+            }
+        }
+
+        public int RightHandOctaveShift
+        {
+            get { return mRightHandOctaveShift; }
+            set
+            {
+                mRightHandOctaveShift = value;
+                Properties.Settings.Default.RightHandOctaveShift = value;
+            }
+        }
+
+        public TransformPressureMethod TransformPressureMethod
+        {
+            get { return mTransformPressureMethod; }
+            set
+            {
+                mTransformPressureMethod = value;
+                Properties.Settings.Default.TransformPressureMethod = (int)value;
+            }
+        }
+
+        /// <summary>
+        /// Преобразует измеренное значение давления из 16-битного числа в код Midi
+        /// </summary>
+        /// <param name="pressure"></param>
+        /// <returns></returns>
+        public byte TransformPressure(ushort pressure)
+        {
+            var result = pressure;
+
+            switch (mTransformPressureMethod)
+            {
+                case TransformPressureMethod.DisableSensor:
+                    return 127;
+
+                case TransformPressureMethod.Linear:
+                    result = (ushort)(result * 127 / mPressureSensonUpperLimit);
+                    break;
+
+                case TransformPressureMethod.Logariphmic:
+                    if (result == 0)
+                        return 0;
+                    result = (ushort)(Math.Exp(4.844 * result / mPressureSensonUpperLimit));
+                    break;
+
+            }
+
+            if (result > 127)
+                result = 127;
+
+            return (byte)result;
         }
 
         /// <summary>
@@ -137,11 +228,11 @@ namespace eAccordeon.Model
 
         private void OnRightKeyStateChanged(AccordeonRightKeys noteKey, NoteState state)
         {
-            var pureNote = AccordeonRightKeyToNote(0, noteKey);
+            var pureNote = AccordeonRightKeyToNote(mRightHandOctaveShift, noteKey);
             var realNotes = SelectedRightRegister.GetNotes(pureNote);
 
             foreach (var n in realNotes)
-                mMidiHelper.Note(mChannelIdForRightSide, n, state);
+                mMidiHelper.Note(mChannelIdForRightSide, n, state, mKeystrokeForce);
         }
 
 
@@ -205,7 +296,7 @@ namespace eAccordeon.Model
             //0x000000FFF0000000; // Октава 1
             //0x000000000FFF0000; // Октава малая
 
-            tmp >>= 16; // Сдвигаем к малой октаве
+            tmp >>= 18; // Сдвигаем к малой октаве
 
             for (int o = 0; o <= 3; o++)
             {
@@ -233,7 +324,7 @@ namespace eAccordeon.Model
             if (tone < 0)  // Какая клавиша нажата не определено
                 return -1;
 
-            return baseOctave * 12 + (tone - 2);
+            return baseOctave * 12 + tone;
         }
 
 
@@ -361,4 +452,13 @@ namespace eAccordeon.Model
         public UInt64 LeftVoicesState;
         public int Duration_ms;
     }
+
+
+    public enum TransformPressureMethod
+    {
+        DisableSensor = 0,
+        Linear = 1,
+        Logariphmic = 2,
+    }
+
 }

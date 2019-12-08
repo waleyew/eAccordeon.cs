@@ -32,7 +32,7 @@ namespace eAccordeon.ViewModel
             try
             {
                 var devId = Properties.Settings.Default.SelectedMidiDeviceId;
-                mSelectedMidiDevice = MidiDevices[devId];
+                SelectedMidiDevice = MidiDevices[devId];
             }
             catch { };
 
@@ -245,6 +245,56 @@ namespace eAccordeon.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        public Array TransformPressureMethods
+        {
+            get { return Enum.GetValues(typeof(TransformPressureMethod)); }
+        }
+
+        public TransformPressureMethod TransformPressureMethod
+        {
+            get { return meAccordeon.TransformPressureMethod; }
+            set
+            {
+                meAccordeon.TransformPressureMethod = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ushort PressureSensonUpperLimit
+        {
+            get { return meAccordeon.PressureSensonUpperLimit; }
+            set
+            {
+                meAccordeon.PressureSensonUpperLimit = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int KeystrokeForce
+        {
+            get { return meAccordeon.KeystrokeForce; }
+            set
+            {
+                meAccordeon.KeystrokeForce = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int RightHandOctaveShift
+        {
+            get { return meAccordeon.RightHandOctaveShift; }
+            set
+            {
+                meAccordeon.RightHandOctaveShift = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+
+
+
 
         public int ChannelIdForRightSide
         {

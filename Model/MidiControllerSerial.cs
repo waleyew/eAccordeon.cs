@@ -29,10 +29,10 @@ namespace eAccordeon.Model
 
         private void ListenSerial()
         {
-            const int packetSize = 1 + 1 + 8 + 8 + 1 + 1;
+            const int packetSize = 1 + 2 + 8 + 8 + 1 + 1;
             byte[] packetData = new byte[packetSize];
 
-            byte pressure = 0;
+            UInt16 pressure = 0;
             AccordeonRightKeys rightKeysState = AccordeonRightKeys.None;
             UInt64 leftVoicesState = 0;
 
@@ -87,8 +87,8 @@ namespace eAccordeon.Model
                     }
 
                     int offset = 1;
-                    pressure = packetData[offset];
-                    offset += sizeof(byte);
+                    pressure = BitConverter.ToUInt16(packetData, offset);
+                    offset += sizeof(UInt16);
 
                     rightKeysState = (AccordeonRightKeys)BitConverter.ToUInt64(packetData, offset);
                     offset += sizeof(ulong);
@@ -99,12 +99,14 @@ namespace eAccordeon.Model
                     var pressedKey = System.Text.Encoding.ASCII.GetChars(packetData, offset, 1)[0];
                     var pressedKeyCode = (int)pressedKey;
 
-                    EAccordeon.HandleKeys(pressure, rightKeysState, leftVoicesState);
+                    byte bPressure = EAccordeon.TransformPressure(pressure);
+                    EAccordeon.HandleKeys(bPressure, rightKeysState, leftVoicesState);
 
                     DebugText = $"pressure={pressure}; rightKeysState={rightKeysState}; leftVoicesState={leftVoicesState}; pressedKey={pressedKey} ({pressedKeyCode})";
                 }
             }
         }
+
 
         public SerialPort Port
         {

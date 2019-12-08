@@ -130,5 +130,53 @@ namespace eAccordeon.Properties {
                 this["SerialportController_PortName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int TransformPressureMethod {
+            get {
+                return ((int)(this["TransformPressureMethod"]));
+            }
+            set {
+                this["TransformPressureMethod"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("300")]
+        public ushort PressureSensonUpperLimit {
+            get {
+                return ((ushort)(this["PressureSensonUpperLimit"]));
+            }
+            set {
+                this["PressureSensonUpperLimit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("127")]
+        public int KeystrokeForce {
+            get {
+                return ((int)(this["KeystrokeForce"]));
+            }
+            set {
+                this["KeystrokeForce"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int RightHandOctaveShift {
+            get {
+                return ((int)(this["RightHandOctaveShift"]));
+            }
+            set {
+                this["RightHandOctaveShift"] = value;
+            }
+        }
     }
 }
