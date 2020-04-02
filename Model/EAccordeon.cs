@@ -20,10 +20,11 @@ namespace eAccordeon.Model
         AccordeonRightKeys mActualPightKeysState;
         UInt64 mActualLeftVoicesState;
         RegisterInfo[] mRightRegisters;
-        RegisterInfo[] mLeftRegisters;
         RegisterInfo mSelectedRightRegister;
-        RegisterInfo mSelectedLeftRegister;
+        BassRegister[] bassRegisters;
+        BassRegister selectedBassRegister;
         int mChannelIdForRightSide = 1;
+        int mChannelIdForLeftSide = 1;
         TransformPressureMethod mTransformPressureMethod;
         ushort mPressureSensonUpperLimit;
         int mKeystrokeForce;
@@ -47,15 +48,9 @@ namespace eAccordeon.Model
             catch { SelectedRightRegister = mRightRegisters[0]; }
 
 
-            mLeftRegisters = new RegisterInfo[]
-            {
-                new RegisterInfo("Основная октава", new int[] {0}),
-            };
-            try { SelectedLeftRegister = mLeftRegisters[Properties.Settings.Default.SelectedLeftRegisterId]; }
-            catch { SelectedLeftRegister = mLeftRegisters[0]; }
-
             mActualPressurePercents_ExpFilterAlpha = Properties.Settings.Default.PressureFilter;
             mChannelIdForRightSide = Properties.Settings.Default.ChannelIdForRightSide;
+            mChannelIdForLeftSide = Properties.Settings.Default.ChannelIdForLeftSide;
 
             mTransformPressureMethod = (TransformPressureMethod)Properties.Settings.Default.TransformPressureMethod;
             mPressureSensonUpperLimit = Properties.Settings.Default.PressureSensonUpperLimit;
@@ -63,6 +58,26 @@ namespace eAccordeon.Model
             mKeystrokeForce = Properties.Settings.Default.KeystrokeForce;
             mRightHandOctaveShift = Properties.Settings.Default.RightHandOctaveShift;
 
+            bassRegisters = BassRegister.GetRegisters();
+            try { selectedBassRegister = bassRegisters[Properties.Settings.Default.SelectedLeftRegisterId]; }
+            catch { selectedBassRegister = bassRegisters.FirstOrDefault(); }
+        }
+
+        public BassRegister SelectedBassRegister
+        {
+            get { return selectedBassRegister; }
+            set
+            {
+                selectedBassRegister = value;
+                mMidiHelper.ResetDevice();
+
+                Properties.Settings.Default.SelectedLeftRegisterId = Array.IndexOf(bassRegisters, value);
+            }
+        }
+
+        public BassRegister[] BassRegisters
+        {
+            get { return bassRegisters; }
         }
 
         public MidiHelper MidiHelper
@@ -201,12 +216,40 @@ namespace eAccordeon.Model
 
             mAppliedPressureCode = pressure;
             mMidiHelper.SetVolume(mChannelIdForRightSide, pressure);
+            mMidiHelper.SetVolume(mChannelIdForLeftSide, pressure);
         }
 
         private void ChangeActualLeftVoisesPressed(ulong leftVoicesState)
         {
-            //throw new NotImplementedException();
+            if (selectedBassRegister == null)
+                return;
+
+            for (int i = 0; i < 64; i++)
+            {
+                UInt64 msk = 1UL << i;
+                bool oldState = ((UInt64)mActualLeftVoicesState & msk) != 0;
+                bool newState = ((UInt64)leftVoicesState & msk) != 0;
+
+                if (newState != oldState)
+                {
+                    OnLeftKeyStateChanged(i, newState ? NoteState.On : NoteState.Off);
+                }
+            }
+            mActualLeftVoicesState = leftVoicesState;
         }
+
+        private void OnLeftKeyStateChanged(int bassValveId, NoteState state)
+        {
+            var realNotes = selectedBassRegister.GetNotes(bassValveId);
+
+            if (realNotes == null)
+                return;
+
+            foreach (var n in realNotes)
+                mMidiHelper.Note(mChannelIdForLeftSide, n, state, mKeystrokeForce);
+        }
+
+
 
         private void ChangeActualRightKeysPressed(AccordeonRightKeys rightKeysState)
         {
@@ -341,15 +384,17 @@ namespace eAccordeon.Model
             }
         }
 
-        public RegisterInfo SelectedLeftRegister
+        public int ChannelIdForLeftSide
         {
-            get { return mSelectedLeftRegister; }
+            get { return mChannelIdForLeftSide; }
             set
             {
-                mSelectedLeftRegister = value;
-                mMidiHelper.ResetDevice();
-
-                Properties.Settings.Default.SelectedLeftRegisterId = Array.IndexOf(mLeftRegisters, value);
+                if (value < 1)
+                    value = 1;
+                if (value > 15)
+                    value = 15;
+                mChannelIdForLeftSide = value;
+                Properties.Settings.Default.ChannelIdForLeftSide = mChannelIdForLeftSide;
             }
         }
 
@@ -370,11 +415,6 @@ namespace eAccordeon.Model
         public RegisterInfo[] GetRightRegisters()
         {
             return mRightRegisters;
-        }
-
-        public RegisterInfo[] GetLeftRegisters()
-        {
-            return mLeftRegisters;
         }
     }
 

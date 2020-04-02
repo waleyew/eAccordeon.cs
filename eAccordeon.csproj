@@ -75,6 +75,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\BassRegister.cs" />
     <Compile Include="Model\IRegisterBase.cs" />
     <Compile Include="Model\MidiControllerBase.cs" />
     <Compile Include="Model\MidiControllerVirtual.cs" />

@@ -43,6 +43,12 @@ namespace eAccordeon.ViewModel
             }
             catch { };
 
+            try
+            {
+                var patchId = Properties.Settings.Default.SelectedPatchBassId;
+                mSelectedPatchBassInfo = PatchBassInfoArray[patchId];
+            }
+            catch { };
 
             MidiControllerBase defaultMidiController;
             mMidiControllers.Add(defaultMidiController = new MidiControllerVirtual(meAccordeon));
@@ -197,17 +203,17 @@ namespace eAccordeon.ViewModel
         }
 
 
-        public RegisterInfo[] LeftRegisterList
+        public BassRegister[] LeftRegisterList
         {
-            get { return meAccordeon.GetLeftRegisters(); }
+            get { return meAccordeon.BassRegisters; }
         }
 
-        public RegisterInfo SelectedLeftRegister
+        public BassRegister SelectedLeftRegister
         {
-            get { return meAccordeon.SelectedLeftRegister; }
+            get { return meAccordeon.SelectedBassRegister; }
             set
             {
-                meAccordeon.SelectedLeftRegister = value;
+                meAccordeon.SelectedBassRegister = value;
                 OnPropertyChanged();
             }
         }
@@ -235,6 +241,32 @@ namespace eAccordeon.ViewModel
             get;
             set;
         } = PatchInfo.CreatePatchInfoArray();
+
+
+
+        PatchInfo mSelectedPatchBassInfo;
+        public PatchInfo SelectedPatchBassInfo
+        {
+            get { return mSelectedPatchBassInfo; }
+            set
+            {
+                mSelectedPatchBassInfo = value;
+                if (mSelectedPatchBassInfo != null)
+                {
+                    meAccordeon.MidiHelper.ChangePatch(meAccordeon.ChannelIdForLeftSide, mSelectedPatchBassInfo.Id);
+                    Properties.Settings.Default.SelectedPatchBassId = Array.IndexOf(PatchBassInfoArray, mSelectedPatchBassInfo);
+                }
+                else
+                    Properties.Settings.Default.SelectedPatchBassId = 0;
+            }
+        }
+
+        public PatchInfo[] PatchBassInfoArray
+        {
+            get;
+            set;
+        } = PatchInfo.CreatePatchInfoArray();
+
 
         public float PressudeFilterP
         {
@@ -300,6 +332,12 @@ namespace eAccordeon.ViewModel
         {
             get { return meAccordeon.ChannelIdForRightSide; }
             set { meAccordeon.ChannelIdForRightSide = value; }
+        }
+
+        public int ChannelIdForLeftSide
+        {
+            get { return meAccordeon.ChannelIdForLeftSide; }
+            set { meAccordeon.ChannelIdForLeftSide = value; }
         }
     }
 

@@ -27,10 +27,10 @@
                 <TabItem Header="Общие настройки MIDI:" >
                     <Grid >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200" SharedSizeGroup="A"/>
+                            <ColumnDefinition Width="190" SharedSizeGroup="A"/>
                             <ColumnDefinition Width="auto" MinWidth="200"></ColumnDefinition>
-                            <ColumnDefinition Width="auto" ></ColumnDefinition>
-                            <ColumnDefinition Width="auto" ></ColumnDefinition>
+                            <ColumnDefinition Width="auto" MinWidth="70"></ColumnDefinition>
+                            <ColumnDefinition Width="auto" MinWidth="30"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition></RowDefinition>
@@ -44,19 +44,25 @@
 
                         <Label Grid.Column="0" Grid.ColumnSpan="2">Устройство воспроизведения:</Label>
                         <ComboBox Grid.Column="1" ItemsSource="{Binding MidiDevices}" SelectedItem="{Binding SelectedMidiDevice}" DisplayMemberPath="Caption" Margin="2"></ComboBox>
-                        <Button Grid.Column="3" Margin="2,2,3,2" Width="90" Command="{Binding ShowMIDIDeviceInfoCommand}">Инфо...</Button>
+                        <Button Grid.Column="2" Grid.ColumnSpan="2" Margin="2,2,3,2" Width="90" Command="{Binding ShowMIDIDeviceInfoCommand}">Инфо...</Button>
 
-                        <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">Инструмент:</Label>
+                        <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">Инструмент (клавиатура):</Label>
                         <ComboBox  Grid.Row="1" Grid.Column="1" ItemsSource="{Binding PatchInfoArray}" SelectedItem="{Binding SelectedPatchInfo}" DisplayMemberPath="Caption" Margin="2"></ComboBox>
 
-                        <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">Регистр клавиш:</Label>
-                        <ComboBox  Grid.Row="2" Grid.Column="1" ItemsSource="{Binding RightRegisterList}" SelectedItem="{Binding SelectedRightRegister}" DisplayMemberPath="Caption" Margin="2"></ComboBox>
+                        <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">Инструмент (басы):</Label>
+                        <ComboBox  Grid.Row="2" Grid.Column="1" ItemsSource="{Binding PatchBassInfoArray}" SelectedItem="{Binding SelectedPatchBassInfo}" DisplayMemberPath="Caption" Margin="2"></ComboBox>
 
-                        <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">Регистр басов:</Label>
-                        <ComboBox  Grid.Row="3" Grid.Column="1" ItemsSource="{Binding LeftRegisterList}" SelectedItem="{Binding SelectedLeftRegister}" DisplayMemberPath="Caption" Margin="2"></ComboBox>
+                        <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">Регистр клавиш:</Label>
+                        <ComboBox  Grid.Row="3" Grid.Column="1" ItemsSource="{Binding RightRegisterList}" SelectedItem="{Binding SelectedRightRegister}" DisplayMemberPath="Caption" Margin="2"></ComboBox>
 
-                        <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">Канал для правой руки:</Label>
-                        <TextBox  Grid.Row="4" Grid.Column="1" Text="{Binding ChannelIdForRightSide}" Margin="2"></TextBox>
+                        <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">Регистр басов:</Label>
+                        <ComboBox  Grid.Row="4" Grid.Column="1" ItemsSource="{Binding LeftRegisterList}" SelectedItem="{Binding SelectedLeftRegister}" DisplayMemberPath="Caption" Margin="2"></ComboBox>
+
+                        <Label Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2">Midi канал:</Label>
+                        <TextBox  Grid.Row="3" Grid.Column="3" Text="{Binding ChannelIdForRightSide}" Margin="2"/>
+
+                        <Label Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2">Midi канал:</Label>
+                        <TextBox  Grid.Row="4" Grid.Column="3" Text="{Binding ChannelIdForLeftSide}" Margin="2"/>
 
                         <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">Сила нажатия клавиш:</Label>
                         <TextBox  Grid.Row="5" Grid.Column="1" Text="{Binding KeystrokeForce}" Margin="2"></TextBox>

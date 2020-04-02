@@ -26,7 +26,7 @@ namespace eAccordeon.Model
 
         public void ChangePatch(int channel, int patchId)
         {
-            midiOut.Send(MidiMessage.ChangePatch(patchId, 1).RawData);
+            midiOut.Send(MidiMessage.ChangePatch(patchId, channel).RawData);
         }
 
 

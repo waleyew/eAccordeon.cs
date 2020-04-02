@@ -178,5 +178,29 @@ namespace eAccordeon.Properties {
                 this["RightHandOctaveShift"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int ChannelIdForLeftSide {
+            get {
+                return ((int)(this["ChannelIdForLeftSide"]));
+            }
+            set {
+                this["ChannelIdForLeftSide"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SelectedPatchBassId {
+            get {
+                return ((int)(this["SelectedPatchBassId"]));
+            }
+            set {
+                this["SelectedPatchBassId"] = value;
+            }
+        }
     }
 }
